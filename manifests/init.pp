@@ -36,7 +36,7 @@ class sickbeard {
   # Install required  dependencies
   $dependencies = [ 'python', 'python-cheetah', 'git' ]
 
-  pacakge { $dependencies:
+  package { $dependencies:
     ensure => installed,
   }
 
@@ -52,7 +52,7 @@ class sickbeard {
   vcsrepo { '/opt/sickbeard':
     ensure   => present,
     provider => git,
-    source   => 'git://github.com/midgetspy/Sick-Beard.git'
+    source   => 'git://github.com/midgetspy/Sick-Beard.git',
     owner    => 'sickbeard',
     group    => 'sickbeard',
   }
