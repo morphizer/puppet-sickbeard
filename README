@@ -1,16 +1,3 @@
 sickbeard
 
-This is the sickbeard module.
-
-License
--------
-
-
-Contact
--------
-
-
-Support
--------
-
-Please log tickets and issues at our [Projects site](http://projects.example.com)
+Puppet module for SickBeard, a PVR application that searches for and manages your TV shows.

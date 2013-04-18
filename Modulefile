@@ -1,11 +1,10 @@
 name    'morphizer-sickbeard'
 version '0.0.1'
-source 'UNKNOWN'
+source 'http://sickbeard.com/'
 author 'morphizer'
 license 'Apache License, Version 2.0'
-summary 'UNKNOWN'
-description 'UNKNOWN'
-project_page 'UNKNOWN'
+summary 'SickBeard PVR application that searches for and manages your TV shows'
+description 'SickBeard PVR application that searches for and manages your TV shows'
+project_page 'blank'
 
-## Add dependencies, if any:
-# dependency 'username/name', '>= 1.2.0'
+dependency 'puppetlabs/vcsrepo', '>= 0.1.1'

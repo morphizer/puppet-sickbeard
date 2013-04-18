@@ -29,13 +29,31 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2013 Your name here, unless otherwise noted.
+# Andrew Harley <morphizer@gmail.com>
 #
 class sickbeard {
 
+  # Install required  dependencies
+  $dependencies = [ 'python', 'python-cheetah', 'git' ]
 
+  pacakge { $dependencies:
+    ensure => installed,
+  }
+
+  # Create a user to run sickbeard as
+  user { 'sickbeard':
+    ensure     => present,
+    comment    => 'SickBeard user, created by Puppet',
+    system     => true,
+    managehome => true,
+  }
+
+  # Clone the sickbeard source using vcsrepo
+  vcsrepo { '/opt/sickbeard':
+    ensure   => present,
+    provider => git,
+    source   => 'git://github.com/midgetspy/Sick-Beard.git'
+    owner    => 'sickbeard',
+    group    => 'sickbeard',
+  }
 }
