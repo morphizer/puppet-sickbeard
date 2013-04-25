@@ -1,0 +1,43 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          sickbeard
+# Required-Start:    $local_fs $network $remote_fs
+# Required-Stop:     $local_fs $network $remote_fs
+# Should-Start:      $NetworkManager
+# Should-Stop:       $NetworkManager
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts and stops sick beard
+# Description:       Sick Beard is a Usenet PVR. For more information see:
+#           http://www.sickbeard.com
+### END INIT INFO
+ 
+USER="<%= user %>"
+ 
+HOST="<%= address %>"
+PORT="<%= port %>"
+
+SBUSR="<%= login_user %>"
+SBPWD="<%= login_pass %>"
+ 
+#Script -- No changes needed below.
+case "$1" in
+start)
+#Start Sick Beard and send all messages to /dev/null.
+cd <%= install_dir %>
+echo "Starting Sick Beard"
+sudo -u $USER -EH nohup python <%= install_dir %>/SickBeard.py -q > /dev/null 2>&1 &
+;;
+stop)
+#Shutdown Sick Beard and delete the index.html files that wget generates.
+echo "Stopping Sick Beard"
+wget -q --user=$SBUSR --password=$SBPWD "http://$HOST:$PORT/home/shutdown/" --delete-after
+sleep 6s
+;;
+*)
+echo "Usage: $0 {start|stop}"
+exit 1
+esac
+ 
+exit 0

@@ -1,37 +1,31 @@
 # == Class: sickbeard
 #
-# Full description of class sickbeard here.
+# Installs and configures sickbeard.
 #
 # === Parameters
 #
-# Document parameters here.
+# [*install_dir*]
+#   Where sickbeard should be installed to. Default: /opt/sickbeard
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
+# [*user*]
+#   The user to run sickbeard service as. Default: sickbeard
 #
 # === Examples
 #
-#  class { sickbeard:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
-#  }
+# include sickbeard
 #
 # === Authors
 #
 # Andrew Harley <morphizer@gmail.com>
 #
-class sickbeard {
+class sickbeard (
+  $install_dir = '/opt/sickbeard',
+  $user = 'sickbeard',
+  $address = '0.0.0.0',
+  $port = '8180',
+  $login_user = '',
+  $login_pass = '',
+) {
 
   # Install required  dependencies
   $dependencies = [ 'python', 'python-cheetah', 'git' ]
@@ -41,7 +35,7 @@ class sickbeard {
   }
 
   # Create a user to run sickbeard as
-  user { 'sickbeard':
+  user { $user:
     ensure     => present,
     comment    => 'SickBeard user, created by Puppet',
     system     => true,
@@ -49,11 +43,27 @@ class sickbeard {
   }
 
   # Clone the sickbeard source using vcsrepo
-  vcsrepo { '/opt/sickbeard':
+  vcsrepo { $install_dir:
     ensure   => present,
     provider => git,
     source   => 'git://github.com/midgetspy/Sick-Beard.git',
-    owner    => 'sickbeard',
-    group    => 'sickbeard',
+    owner    => $user,
+    require  => User[$user],
   }
+
+  file { '/etc/init.d/sickbeard':
+    ensure  => file,
+    content => template('sickbeard/ubuntu-init-sickbeard.erb'),
+    mode    => '0755',
+    require => Vcsrepo[$install_dir],
+  }
+
+  service {'sickbeard':
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => false,
+    require    => File['/etc/init.d/sickbeard'],
+  }
+
 }
