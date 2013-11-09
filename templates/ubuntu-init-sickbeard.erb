@@ -13,21 +13,21 @@
 #           http://www.sickbeard.com
 ### END INIT INFO
  
-USER="<%= user %>"
+USER="<%= @user %>"
  
-HOST="<%= address %>"
-PORT="<%= port %>"
+HOST="<%= @address %>"
+PORT="<%= @port %>"
 
-SBUSR="<%= login_user %>"
-SBPWD="<%= login_pass %>"
+SBUSR="<%= @login_user %>"
+SBPWD="<%= @login_pass %>"
  
 #Script -- No changes needed below.
 case "$1" in
 start)
 #Start Sick Beard and send all messages to /dev/null.
-cd <%= install_dir %>
+cd <%= @install_dir %>
 echo "Starting Sick Beard"
-sudo -u $USER -EH nohup python <%= install_dir %>/SickBeard.py -q > /dev/null 2>&1 &
+sudo -u $USER -EH nohup python <%= @install_dir %>/SickBeard.py -q > /dev/null 2>&1 &
 ;;
 stop)
 #Shutdown Sick Beard and delete the index.html files that wget generates.
