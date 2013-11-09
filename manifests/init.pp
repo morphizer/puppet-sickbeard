@@ -27,12 +27,25 @@ class sickbeard (
   $login_pass = '',
 ) {
 
-  # Install required  dependencies
-  $dependencies = [ 'python', 'python-cheetah', 'git' ]
+  # Install required  dependencies. Doing it this way to get around conflicts
+  # from other modules...
+  if ! defined(Package['git'])  {
+    package { 'git':
+      ensure => installed,
+    }
+  )
 
-  package { $dependencies:
-    ensure => installed,
-  }
+  if ! defined(Package['python'])  {
+    package { 'python':
+      ensure => installed,
+    }
+  )
+
+  if ! defined(Package['python-cheetah'])  {
+    package { 'python-cheetah':
+      ensure => installed,
+    }
+  )
 
   # Create a user to run sickbeard as
   user { $user:
