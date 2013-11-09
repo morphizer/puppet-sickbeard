@@ -22,7 +22,7 @@ class sickbeard (
   $install_dir = '/opt/sickbeard',
   $user = 'sickbeard',
   $address = '0.0.0.0',
-  $port = '8180',
+  $port = '8081',
   $login_user = '',
   $login_pass = '',
 ) {
