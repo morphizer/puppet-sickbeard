@@ -33,19 +33,19 @@ class sickbeard (
     package { 'git':
       ensure => installed,
     }
-  )
+  }
 
   if ! defined(Package['python'])  {
     package { 'python':
       ensure => installed,
     }
-  )
+  }
 
   if ! defined(Package['python-cheetah'])  {
     package { 'python-cheetah':
       ensure => installed,
     }
-  )
+  }
 
   # Create a user to run sickbeard as
   user { $user:
