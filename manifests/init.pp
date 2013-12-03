@@ -10,6 +10,9 @@
 # [*user*]
 #   The user to run sickbeard service as. Default: sickbeard
 #
+# [*use_daemon*]
+#   Whether or not to start sickbeard as a daemon
+#
 # === Examples
 #
 # include sickbeard
@@ -25,6 +28,8 @@ class sickbeard (
   $port = '8081',
   $login_user = '',
   $login_pass = '',
+  $use_daemon = true,
+  $data_dir = undef
 ) {
 
   # Install required  dependencies. Doing it this way to get around conflicts
@@ -66,16 +71,25 @@ class sickbeard (
 
   file { '/etc/init.d/sickbeard':
     ensure  => file,
-    content => template('sickbeard/ubuntu-init-sickbeard.erb'),
+    content => $use_daemon ? {
+      true => template('sickbeard/init.ubuntu.erb'),
+      false => template('sickbeard/ubuntu-init-sickbeard.erb') },
     mode    => '0755',
     require => Vcsrepo[$install_dir],
+    notify  => Service["sickbeard"]
+  }
+
+  if $use_daemon {
+    file { '/etc/default/sickbeard':
+      content => template('sickbeard/default.sickbeard.erb')
+    }
   }
 
   service {'sickbeard':
     ensure     => running,
     enable     => true,
     hasrestart => true,
-    hasstatus  => false,
+    hasstatus  => $use_daemon,
     require    => File['/etc/init.d/sickbeard'],
   }
 
